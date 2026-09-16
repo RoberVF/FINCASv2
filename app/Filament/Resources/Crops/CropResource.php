@@ -24,7 +24,7 @@ class CropResource extends Resource
     protected static ?string $pluralModelLabel = 'Cultivos';
     protected static ?string $navigationLabel = 'Cultivos';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCpuChip;
 
     public static function form(Schema $schema): Schema
     {
