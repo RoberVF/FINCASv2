@@ -18,6 +18,12 @@ class VarietyResource extends Resource
 {
     protected static ?string $model = Variety::class;
 
+    protected static ?string $modelLabel = 'Variedad';
+    protected static ?string $pluralModelLabel = 'Variedades';
+    protected static ?string $navigationLabel = 'Variedades';
+
+    protected static ?int $navigationSort = 3;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     public static function form(Schema $schema): Schema

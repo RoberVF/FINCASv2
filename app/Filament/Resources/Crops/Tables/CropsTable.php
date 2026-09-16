@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\TextColumn;
 
 class CropsTable
 {
@@ -13,7 +14,12 @@ class CropsTable
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('name')
+                    ->label('Cultivo')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('description')
+                    ->label('Descripción'),
             ])
             ->filters([
                 //

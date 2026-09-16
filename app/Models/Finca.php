@@ -52,10 +52,12 @@ class Finca extends Model
     {
         return $this->hasMany(Irrigation::class);
     }
+
     public function treatments()
     {
         return $this->hasMany(Treatment::class);
     }
+
     public function harvests()
     {
         return $this->hasMany(Harvest::class);

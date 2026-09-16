@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Crops\Schemas;
 
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
 
 class CropForm
 {
@@ -10,7 +11,13 @@ class CropForm
     {
         return $schema
             ->components([
-                //
+                TextInput::make('name')
+                    ->label('Nombre del Cultivo')
+                    ->required()
+                    ->maxLength(255),
+                TextInput::make('description')
+                    ->label('Descripción')
+                    ->maxLength(255),
             ]);
     }
 }

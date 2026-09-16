@@ -18,7 +18,11 @@ class CropResource extends Resource
 {
     protected static ?string $model = Crop::class;
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 2;
+
+    protected static ?string $modelLabel = 'Cultivo';
+    protected static ?string $pluralModelLabel = 'Cultivos';
+    protected static ?string $navigationLabel = 'Cultivos';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
