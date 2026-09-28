@@ -48,18 +48,23 @@ class Finca extends Model
         return $this->belongsTo(Variety::class);
     }
 
-    public function irrigations()
-    {
-        return $this->hasMany(Irrigation::class);
-    }
-
-    public function treatments()
-    {
-        return $this->hasMany(Treatment::class);
-    }
-
     public function harvests()
     {
         return $this->hasMany(Harvest::class);
+    }
+    
+    public function irrigations(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Irrigation::class);
+    }
+
+    public function rainfalls(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Rainfall::class);
+    }
+
+    public function treatments(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Treatment::class);
     }
 }

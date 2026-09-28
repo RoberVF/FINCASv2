@@ -36,8 +36,6 @@ class FincaResource extends Resource
     {
         return [
             RelationManagers\HarvestsRelationManager::class,
-            RelationManagers\IrrigationsRelationManager::class,
-            RelationManagers\TreatmentsRelationManager::class,
         ];
     }
 

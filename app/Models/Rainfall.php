@@ -5,15 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Irrigation extends Model
+class Rainfall extends Model
 {
-    protected $fillable = [
-        'user_id',
-        'date',
-        'quantity',
-        'cost',
-        'notes'
-    ];
+    protected $fillable = ['user_id', 'zone', 'date', 'quantity_mm', 'observations'];
 
     public function fincas(): BelongsToMany
     {
