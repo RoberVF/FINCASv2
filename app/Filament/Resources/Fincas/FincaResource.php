@@ -35,9 +35,9 @@ class FincaResource extends Resource
     public static function getRelations(): array
     {
         return [
+            RelationManagers\HarvestsRelationManager::class,
             RelationManagers\IrrigationsRelationManager::class,
             RelationManagers\TreatmentsRelationManager::class,
-            RelationManagers\HarvestsRelationManager::class,
         ];
     }
 
