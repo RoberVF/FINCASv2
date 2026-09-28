@@ -22,6 +22,7 @@ class EditFinca extends EditRecord
     {
         return [
             FincaHarvestsChart::class,
+            \App\Filament\Resources\Fincas\Widgets\FincaWaterChart::class,
         ];
     }
 }

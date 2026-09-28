@@ -16,9 +16,15 @@ class StatsOverview extends BaseWidget
         $fincasIds = Finca::pluck('id');
 
         $ingresos = Harvest::whereIn('finca_id', $fincasIds)->sum('sale_price') ?? 0;
-        $gastosRiego = Irrigation::whereIn('finca_id', $fincasIds)->sum('cost') ?? 0;
-        $gastosTratamiento = Treatment::whereIn('finca_id', $fincasIds)->sum('cost') ?? 0;
-        
+
+        $gastosRiego = Irrigation::whereHas('fincas', function ($query) use ($fincasIds) {
+            $query->whereIn('fincas.id', $fincasIds);
+        })->sum('cost') ?? 0;
+
+        $gastosTratamiento = Treatment::whereHas('fincas', function ($query) use ($fincasIds) {
+            $query->whereIn('fincas.id', $fincasIds);
+        })->sum('cost') ?? 0;
+
         $gastosTotales = $gastosRiego + $gastosTratamiento;
         $beneficioNeto = $ingresos - $gastosTotales;
 
@@ -27,12 +33,12 @@ class StatsOverview extends BaseWidget
                 ->description('Suma de todas las ventas registradas')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success'),
-                
+
             Stat::make('Gastos Totales', number_format($gastosTotales, 2) . ' €')
                 ->description('Riegos y Fitosanitarios/Abonos')
                 ->descriptionIcon('heroicon-m-arrow-trending-down')
                 ->color('danger'),
-                
+
             Stat::make('Beneficio Neto', number_format($beneficioNeto, 2) . ' €')
                 ->description($beneficioNeto >= 0 ? 'Rentabilidad positiva' : 'Pérdidas acumuladas')
                 ->descriptionIcon($beneficioNeto >= 0 ? 'heroicon-m-check-badge' : 'heroicon-m-exclamation-triangle')
