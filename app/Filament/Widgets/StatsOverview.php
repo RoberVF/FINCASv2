@@ -2,18 +2,27 @@
 
 namespace App\Filament\Widgets;
 
-use Filament\Widgets\StatsOverviewWidget as BaseWidget;
-use Filament\Widgets\StatsOverviewWidget\Stat;
 use App\Models\Finca;
 use App\Models\Harvest;
-use App\Models\Treatment;
 use App\Models\Irrigation;
+use App\Models\Treatment;
+use Filament\Widgets\StatsOverviewWidget as BaseWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 
 class StatsOverview extends BaseWidget
 {
+    use InteractsWithPageFilters;
+
     protected function getStats(): array
     {
-        $fincasIds = Finca::pluck('id');
+        $cropId = $this->filters['crop_id'] ?? null;
+
+        $fincasQuery = Finca::query();
+        if ($cropId) {
+            $fincasQuery->where('crop_id', $cropId);
+        }
+        $fincasIds = $fincasQuery->pluck('id');
 
         $ingresos = Harvest::whereIn('finca_id', $fincasIds)->sum('sale_price') ?? 0;
 

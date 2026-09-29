@@ -18,13 +18,15 @@ class CropResource extends Resource
 {
     protected static ?string $model = Crop::class;
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 100;
 
     protected static ?string $modelLabel = 'Cultivo';
     protected static ?string $pluralModelLabel = 'Cultivos';
     protected static ?string $navigationLabel = 'Cultivos';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCpuChip;
+
+    protected static \UnitEnum|string|null $navigationGroup = 'Configuración';
 
     public static function form(Schema $schema): Schema
     {

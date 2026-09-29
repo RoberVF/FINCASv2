@@ -2,31 +2,41 @@
 
 namespace App\Filament\Widgets;
 
-use Filament\Widgets\ChartWidget;
+use App\Models\Finca;
 use App\Models\Irrigation;
-use Carbon\Carbon;
+use Filament\Widgets\ChartWidget;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
+use Illuminate\Contracts\View\View;
 
 class TotalIrrigationChart extends ChartWidget
 {
+    use InteractsWithPageFilters;
+
     protected ?string $heading = 'Consumo Total de Riego por Año (Pipas)';
     protected static ?int $sort = 4;
 
-    protected function getData(): array
+    public function render(): View
     {
-        $riegos = Irrigation::all();
-        $riegoPorAno = [];
-
-        foreach ($riegos as $riego) {
-            $ano = Carbon::parse($riego->date)->year;
-            
-            if (!isset($riegoPorAno[$ano])) {
-                $riegoPorAno[$ano] = 0;
-            }
-            
-            $riegoPorAno[$ano] += $riego->quantity;
+        if (empty($this->filters['crop_id'])) {
+            return view('filament.widgets.hidden');
         }
 
-        ksort($riegoPorAno);
+        return parent::render();
+    }
+
+    protected function getData(): array
+    {
+        $cropId = $this->filters['crop_id'];
+        $fincasIds = Finca::where('crop_id', $cropId)->pluck('id');
+
+        $riegoPorAno = Irrigation::whereHas('fincas', function ($query) use ($fincasIds) {
+            $query->whereIn('fincas.id', $fincasIds);
+        })
+        ->selectRaw('EXTRACT(YEAR FROM date) as ano, SUM(quantity) as total')
+        ->groupByRaw('EXTRACT(YEAR FROM date)')
+        ->orderBy('ano')
+        ->pluck('total', 'ano')
+        ->toArray();
 
         return [
             'datasets' => [

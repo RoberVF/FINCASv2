@@ -21,7 +21,9 @@ class TreatmentResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBeaker;
     protected static ?string $modelLabel = 'Tratamiento';
     protected static ?string $pluralModelLabel = 'Tratamientos';
-    protected static ?int $navigationSort = 90;
+    protected static ?int $navigationSort = 50;
+    
+    protected static \UnitEnum|string|null $navigationGroup = 'Otros';
 
     public static function form(Schema $schema): Schema
     {

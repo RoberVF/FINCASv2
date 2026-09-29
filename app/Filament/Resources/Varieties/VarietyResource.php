@@ -22,9 +22,11 @@ class VarietyResource extends Resource
     protected static ?string $pluralModelLabel = 'Variedades';
     protected static ?string $navigationLabel = 'Variedades';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 110;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
+
+    protected static \UnitEnum|string|null $navigationGroup = 'Configuración';
 
     public static function form(Schema $schema): Schema
     {

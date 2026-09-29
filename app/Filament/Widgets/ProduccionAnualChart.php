@@ -2,35 +2,39 @@
 
 namespace App\Filament\Widgets;
 
-use Filament\Widgets\ChartWidget;
-use App\Models\Harvest;
 use App\Models\Finca;
-use Carbon\Carbon;
+use App\Models\Harvest;
+use Filament\Widgets\ChartWidget;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
+use Illuminate\Contracts\View\View;
 
 class ProduccionAnualChart extends ChartWidget
 {
+    use InteractsWithPageFilters;
+
     protected ?string $heading = 'Producción Total por Año (Kg)';
     protected static ?int $sort = 3;
 
-    protected function getData(): array
+    public function render(): View
     {
-        $fincasIds = Finca::pluck('id');
-        
-        $cosechas = Harvest::whereIn('finca_id', $fincasIds)->get();
-
-        $produccionPorAno = [];
-
-        foreach ($cosechas as $cosecha) {
-            $ano = Carbon::parse($cosecha->date)->year;
-            
-            if (!isset($produccionPorAno[$ano])) {
-                $produccionPorAno[$ano] = 0;
-            }
-            
-            $produccionPorAno[$ano] += $cosecha->quantity_kg;
+        if (empty($this->filters['crop_id'])) {
+            return view('filament.widgets.hidden');
         }
 
-        ksort($produccionPorAno);
+        return parent::render();
+    }
+
+    protected function getData(): array
+    {
+        $cropId = $this->filters['crop_id'];
+        $fincasIds = Finca::where('crop_id', $cropId)->pluck('id');
+        
+        $produccionPorAno = Harvest::whereIn('finca_id', $fincasIds)
+            ->selectRaw('EXTRACT(YEAR FROM date) as ano, SUM(quantity_kg) as total')
+            ->groupByRaw('EXTRACT(YEAR FROM date)')
+            ->orderBy('ano')
+            ->pluck('total', 'ano')
+            ->toArray();
 
         return [
             'datasets' => [

@@ -21,7 +21,10 @@ class RainfallResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCloud;
     protected static ?string $modelLabel = 'Lluvia';
     protected static ?string $pluralModelLabel = 'Lluvias';
-    protected static ?int $navigationSort = 100;
+    protected static ?int $navigationSort = 10;
+
+    protected static \UnitEnum|string|null $navigationGroup = 'Agua';
+
 
     public static function form(Schema $schema): Schema
     {

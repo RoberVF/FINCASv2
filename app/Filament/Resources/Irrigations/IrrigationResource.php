@@ -20,9 +20,12 @@ class IrrigationResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFunnel;
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 20;
     protected static ?string $navigationLabel = 'Riegos';
     protected static ?string $pluralLabel = 'Riegos';
+
+    protected static \UnitEnum|string|null $navigationGroup = 'Agua';
+
 
     public static function form(Schema $schema): Schema
     {
