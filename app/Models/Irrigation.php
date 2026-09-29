@@ -9,6 +9,7 @@ class Irrigation extends Model
 {
     protected $fillable = [
         'user_id',
+        'tank_id',
         'date',
         'quantity',
         'cost',
@@ -18,6 +19,11 @@ class Irrigation extends Model
     public function fincas(): BelongsToMany
     {
         return $this->belongsToMany(Finca::class);
+    }
+
+    public function tank()
+    {
+        return $this->belongsTo(Tank::class);
     }
 
     protected static function booted(): void

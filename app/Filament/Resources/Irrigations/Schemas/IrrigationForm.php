@@ -8,6 +8,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Schemas\Components\Utilities\Get;
 
 class IrrigationForm
 {
@@ -30,13 +31,23 @@ class IrrigationForm
                     ->multiple()
                     ->preload()
                     ->required(),
+                Select::make('tank_id')
+                    ->label('Tanque Origen')
+                    ->relationship('tank', 'name')
+                    ->nullable()
+                    ->live()
+                    ->helperText('Déjalo en blanco si es agua externa (Cuba).'),
+                TextInput::make('cost')
+                    ->label('Coste del Riego (€)')
+                    ->numeric()
+                    ->disabled(fn(Get $get) => filled($get('tank_id')))
+                    ->dehydrated()
+                    ->helperText(fn(Get $get) => filled($get('tank_id'))
+                        ? 'El coste se calculará automáticamente usando el Precio Medio del tanque.'
+                        : 'Introduce el coste de la cuba manual.'),
                 TextInput::make('quantity')
                     ->label('Cantidad (Pipas)')
                     ->numeric(),
-                TextInput::make('cost')
-                    ->label('Coste (€)')
-                    ->numeric()
-                    ->default(0),
                 Textarea::make('notes')
                     ->label('Notas')
                     ->columnSpanFull(),

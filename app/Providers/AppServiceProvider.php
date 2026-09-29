@@ -5,6 +5,10 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Support\Facades\Blade;
+use App\Models\Irrigation;
+use App\Models\WaterMovement;
+use App\Observers\IrrigationObserver;
+use App\Observers\WaterMovementObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,5 +36,7 @@ class AppServiceProvider extends ServiceProvider
             </script>
         ')
         );
+        WaterMovement::observe(WaterMovementObserver::class);
+        Irrigation::observe(IrrigationObserver::class);
     }
 }

@@ -23,6 +23,7 @@ class IrrigationsTable
                     ->suffix(' Litros'),
                 TextColumn::make('cost')->label('Coste')->money('EUR'),
             ])
+            ->defaultSort('date', 'desc')
             ->filters([
                 //
             ])
