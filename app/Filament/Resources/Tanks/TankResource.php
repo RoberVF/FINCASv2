@@ -18,11 +18,13 @@ class TankResource extends Resource
 {
     protected static ?string $model = Tank::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArchiveBox;
 
     protected static \UnitEnum|string|null $navigationGroup = 'Agua';
 
     protected static ?int $navigationSort = 30;
+
+    protected static ?string $navigationLabel = 'Tanques';
 
     public static function form(Schema $schema): Schema
     {
