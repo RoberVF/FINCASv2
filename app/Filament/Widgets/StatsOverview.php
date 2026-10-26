@@ -17,6 +17,7 @@ class StatsOverview extends BaseWidget
     protected function getStats(): array
     {
         $cropId = $this->filters['crop_id'] ?? null;
+        $currentYear = now()->year;
 
         $fincasQuery = Finca::query();
         if ($cropId) {
@@ -24,32 +25,38 @@ class StatsOverview extends BaseWidget
         }
         $fincasIds = $fincasQuery->pluck('id');
 
-        $ingresos = Harvest::whereIn('finca_id', $fincasIds)->sum('sale_price') ?? 0;
+        $ingresos = Harvest::whereIn('finca_id', $fincasIds)
+            ->whereYear('date', $currentYear)
+            ->sum('sale_price') ?? 0;
 
         $gastosRiego = Irrigation::whereHas('fincas', function ($query) use ($fincasIds) {
             $query->whereIn('fincas.id', $fincasIds);
-        })->sum('cost') ?? 0;
+        })
+        ->whereYear('date', $currentYear)
+        ->sum('cost') ?? 0;
 
         $gastosTratamiento = Treatment::whereHas('fincas', function ($query) use ($fincasIds) {
             $query->whereIn('fincas.id', $fincasIds);
-        })->sum('cost') ?? 0;
+        })
+        ->whereYear('date', $currentYear)
+        ->sum('cost') ?? 0;
 
         $gastosTotales = $gastosRiego + $gastosTratamiento;
         $beneficioNeto = $ingresos - $gastosTotales;
 
         return [
-            Stat::make('Ingresos Totales', number_format($ingresos, 2) . ' €')
-                ->description('Suma de todas las ventas registradas')
+            Stat::make('Ingresos Totales (' . $currentYear . ')', number_format($ingresos, 2) . ' €')
+                ->description('Ventas registradas en el año actual')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success'),
 
-            Stat::make('Gastos Totales', number_format($gastosTotales, 2) . ' €')
-                ->description('Riegos y Fitosanitarios/Abonos')
+            Stat::make('Gastos Totales (' . $currentYear . ')', number_format($gastosTotales, 2) . ' €')
+                ->description('Riegos y Fitosanitarios del año actual')
                 ->descriptionIcon('heroicon-m-arrow-trending-down')
                 ->color('danger'),
 
-            Stat::make('Beneficio Neto', number_format($beneficioNeto, 2) . ' €')
-                ->description($beneficioNeto >= 0 ? 'Rentabilidad positiva' : 'Pérdidas acumuladas')
+            Stat::make('Beneficio Neto (' . $currentYear . ')', number_format($beneficioNeto, 2) . ' €')
+                ->description($beneficioNeto >= 0 ? 'Rentabilidad anual positiva' : 'Pérdidas acumuladas en el año')
                 ->descriptionIcon($beneficioNeto >= 0 ? 'heroicon-m-check-badge' : 'heroicon-m-exclamation-triangle')
                 ->color($beneficioNeto >= 0 ? 'success' : 'danger'),
         ];

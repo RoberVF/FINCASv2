@@ -23,6 +23,7 @@ class IrrigationResource extends Resource
     protected static ?int $navigationSort = 20;
     protected static ?string $navigationLabel = 'Riegos';
     protected static ?string $pluralLabel = 'Riegos';
+    protected static ?string $modelLabel = 'Riego';
 
     protected static \UnitEnum|string|null $navigationGroup = 'Agua';
 

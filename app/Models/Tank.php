@@ -25,6 +25,21 @@ class Tank extends Model
         'is_roofed' => 'boolean',
     ];
 
+    protected static function booted(): void
+    {
+        static::addGlobalScope('user_id', function ($builder) {
+            if (auth()->check() && !auth()->user()->is_admin) {
+                $builder->where('user_id', auth()->id());
+            }
+        });
+
+        static::creating(function ($model) {
+            if (auth()->check() && empty($model->user_id)) {
+                $model->user_id = auth()->id();
+            }
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
